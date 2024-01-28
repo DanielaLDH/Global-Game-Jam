@@ -9,9 +9,15 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu.unity
     guid: 8a3a640ccc86cd44585d9c58ac574e2b
   - enabled: 1
+    path: Assets/Scenes/VisualNovel1.unity
+    guid: 2a8851f4b643b5a45a1ea4080363149c
+  - enabled: 0
     path: Assets/Scenes/VisualNovel.unity
     guid: 6a755db9f52d8454c8b660a0ad2e5a2a
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Scenes/Battle.unity
+    guid: 268f24f8a5b297e4b8aeb74435936716
+  - enabled: 0
+    path: Assets/Scenes/Battle_UI.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects: {}
