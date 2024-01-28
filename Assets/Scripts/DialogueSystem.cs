@@ -9,13 +9,25 @@ public class Dialogue
     public string question;
     public string[] responses;
 }
+[System.Serializable]
+public class NarrativeDialogue
+{
+    public string[] sentences;
+}
 
 public class DialogueSystem : MonoBehaviour
 {
     public Text dialogueText;
+    public Text narrativeDialogueText;
     public GameObject[] choiceButtons;
     public List<Dialogue> dialogues = new List<Dialogue>();
+    public List<NarrativeDialogue> narrativeDialogues = new List<NarrativeDialogue>();
+    public GameObject narrativeDialogueBar; // Barra de diálogo para narrativa
+    public GameObject questionDialogueBar;  // Barra de diálogo para perguntas
 
+
+    private bool isQuestionDialogue = false;
+    private int currentNarrativeIndex = 0;
     private int choice;
     private int currentDialogueIndex = 0;
     private int choiceOneCount = 0; // Contador para a escolha do botão 1
@@ -31,19 +43,45 @@ public class DialogueSystem : MonoBehaviour
     // Exemplo de um diálogo
     public void StartDialogue()
     {
-        if (currentDialogueIndex < dialogues.Count)
+        if (isQuestionDialogue)
         {
-            Dialogue currentDialogue = dialogues[currentDialogueIndex];
-            dialogueText.text = currentDialogue.question;
+            narrativeDialogueBar.SetActive(false);
+            questionDialogueBar.SetActive(true);
+            if (currentDialogueIndex < dialogues.Count)
+            {
+                Dialogue currentDialogue = dialogues[currentDialogueIndex];
+                dialogueText.text = currentDialogue.question;
 
-            SetupChoiceButtons(currentDialogue);
+                SetupChoiceButtons(currentDialogue);
+            }
+            else
+            {
+                Debug.Log("Diálogos concluídos");
+                // Processar as escolhas aqui
+                SceneManager.LoadScene(2);
+            }
         }
         else
         {
-            Debug.Log("Diálogos concluídos");
-            // Processar as escolhas aqui
-            SceneManager.LoadScene(2);
+            narrativeDialogueBar.SetActive(true);
+            questionDialogueBar.SetActive(false);
+            // Lógica para diálogo narrativo
+            if (currentNarrativeIndex < narrativeDialogues.Count)
+            {
+                string currentSentence = narrativeDialogues[currentNarrativeIndex].sentences[currentDialogueIndex];
+                narrativeDialogueText.text = currentSentence;
+                // Esconder ou desabilitar os botões de escolha
+            }
+            else
+            {
+                Debug.Log(isQuestionDialogue);
+                // Transição para diálogo de perguntas
+                isQuestionDialogue = true;
+                currentDialogueIndex = 0;
+                StartDialogue();
+            }
         }
+
     }
 
 
@@ -90,6 +128,23 @@ public class DialogueSystem : MonoBehaviour
         currentDialogueIndex++;
         StartDialogue();
     }
+
+    public void AdvanceNarrative()
+    {
+        currentDialogueIndex++;
+        if (currentDialogueIndex < narrativeDialogues[currentNarrativeIndex].sentences.Length)
+        {
+            narrativeDialogueText.text = narrativeDialogues[currentNarrativeIndex].sentences[currentDialogueIndex];
+        }
+        else
+        {
+            // Transição para diálogo de perguntas
+            isQuestionDialogue = true;
+            currentDialogueIndex = 0;
+            StartDialogue();
+        } 
+    }
+
 
     void DetermineCharacter()
     {

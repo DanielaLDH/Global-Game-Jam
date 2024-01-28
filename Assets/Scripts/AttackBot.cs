@@ -4,23 +4,31 @@ public class AttackBot : MonoBehaviour
 {
     public float attackDamage = 10f;
     public float health = 100f;
+    public int defense; // defesa do inimigo
 
     private bool isProvoked = false;
 
     public void TakeDamage(float damage)
     {
-        health -= damage;
-        if (health <= 0)
+        if (damage > defense)
         {
-            Destroy(gameObject); // Destrói o objeto se a saúde chegar a 0
-            return;
+            health -= damage;
+            if (health <= 0)
+            {
+                Destroy(gameObject); // Destrói o objeto se a saúde chegar a 0
+                return;
+            }
+
+            if (!isProvoked)
+            {
+                isProvoked = true;
+                RespondWithAttack();
+
+            }
         }
-
-        if (!isProvoked)
+        else
         {
-            isProvoked = true;
-            RespondWithAttack();
-
+            Debug.Log("Ataque insuficiente para penetrar a defesa.");
         }
     }
 
